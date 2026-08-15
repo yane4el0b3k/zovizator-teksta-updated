@@ -1,0 +1,1 @@
+# zovizator-teksta-updated
