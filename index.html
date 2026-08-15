@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Зовизатор текста</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: white;
+            font-family: Arial, sans-serif;
+            color: #000;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            padding: 50px 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .version {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            margin-top: 30px;
+            padding: 16px;
+            resize: vertical;
+            border: 1px solid #aaa;
+            border-radius: 14px;
+            outline: none;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #000;
+        }
+
+        textarea:focus {
+            border-color: #000;
+        }
+
+        .convert-button {
+            width: 100%;
+            margin-top: 12px;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: #000;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .convert-button:hover {
+            background: #222;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .result-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .result {
+            font-size: 20px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .copy-button {
+            margin-top: 12px;
+            padding: 10px 16px;
+            border: 1px solid #aaa;
+            border-radius: 10px;
+            background: white;
+            color: black;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .copy-button:hover {
+            background: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1>Зовизатор текста</h1>
+
+        <div class="version">
+            Версия коч братан хаммам голда ремикс
+        </div>
+
+        <textarea
+            id="inputText"
+            placeholder="Введите текст..."
+        ></textarea>
+
+        <button class="convert-button" onclick="zovizirovat()">
+            ЗАЗОВИЗИРОВАТЬ
+        </button>
+
+        <div class="result-box" id="resultBox">
+
+            <div class="result-title">
+                Результат:
+            </div>
+
+            <div class="result" id="result"></div>
+
+            <button
+                class="copy-button"
+                onclick="copyResult()"
+                id="copyButton"
+            >
+                Копировать
+            </button>
+
+        </div>
+
+    </main>
+
+    <script>
+        function zovizirovat() {
+            const input = document.getElementById("inputText").value;
+
+            const result = input
+                .replace(/[зЗсС]/g, "Z")
+                .replace(/[вВ]/g, "V")
+                .replace(/[оО]/g, "O");
+
+            document.getElementById("result").textContent = result;
+            document.getElementById("resultBox").style.display = "block";
+        }
+
+
+        function copyResult() {
+            const result = document.getElementById("result").textContent;
+            const button = document.getElementById("copyButton");
+
+            if (!result) {
+                return;
+            }
+
+            // Создаём временное поле
+            const textarea = document.createElement("textarea");
+
+            textarea.value = result;
+
+            // Делаем его невидимым
+            textarea.style.position = "fixed";
+            textarea.style.left = "-9999px";
+            textarea.style.top = "0";
+
+            document.body.appendChild(textarea);
+
+            // Выделяем текст
+            textarea.focus();
+            textarea.select();
+            textarea.setSelectionRange(0, textarea.value.length);
+
+            // Копируем
+            const successful = document.execCommand("copy");
+
+            // Удаляем временное поле
+            document.body.removeChild(textarea);
+
+            if (successful) {
+                button.textContent = "Скопировано!";
+
+                setTimeout(() => {
+                    button.textContent = "Копировать";
+                }, 1500);
+            } else {
+                button.textContent = "Не удалось скопировать";
+
+                setTimeout(() => {
+                    button.textContent = "Копировать";
+                }, 1500);
+            }
+        }
+    </script>
+
+</body>
+</html>
